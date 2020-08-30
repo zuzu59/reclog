@@ -1,7 +1,7 @@
 # reclog
 Système très simple d'enregistrement de logs via le réseau
 
-zf200829.1502
+zf200830.1353
 
 # ATTENTION, en cours de rédaction !
 
@@ -14,6 +14,7 @@ zf200829.1502
   * [Deux versions sont possibles](#deux-versions-sont-possibles)
 * [Version simple en local](#version-simple-en-local)
 * [Version complexe avec le tremplin](#version-complexe-avec-le-tremplin)
+* [Test de la connexion](#test-de-la-connexion)
 <!-- /TOC -->
 
 
@@ -32,7 +33,7 @@ Il suffit donc de simplement écrire dans une port du serveur pour sauvegarder d
 # Version simple en local
 On redirige tout ce qui arrive sur un *port* dans un fichier avec la commande *socat*:
 ```
-socat -u TCP4-LISTEN:55514,reuseaddr,fork OPEN:./file.log,creat,append
+socat TCP4-LISTEN:55514,reuseaddr,fork OPEN:./file.log,creat,append
 ```
 On peut l'utiliser facilement avec ce petit script bash:
 ```
@@ -47,12 +48,12 @@ socat TCP-LISTEN:55514,reuseaddr,fork TCP-LISTEN:55614,reuseaddr,bind=127.0.0.1
 
 Puis après on creuse un *tunnel ssh* entre la machine *locale* et la machine *remote* afin de transporter le *port* du *reclog* sur sa machine *locale* (à faire tourner sur sa machine *locale*):
 ``` 
-ssh -N -L 23000:localhost:23000 user@machine_remote &
+ssh -N -L 55514:localhost:55614 user@machine_remote &
 ```
 
 Et enfin on redirige tout ce qui arrive sur le *port* de sa machine *locale* dans un fichier avec la commande *socat* (à faire tourner sur sa machine locale):
 ```
-socat -u TCP4-LISTEN:55514,reuseaddr,fork OPEN:./file.log,creat,append
+socat TCP4-LISTEN:55514,reuseaddr,fork OPEN:./file.log,creat,append
 ```
 
 On peut l'utiliser facilement avec ce petit script bash (à faire tourner sur sa machine *locale*):
@@ -64,6 +65,13 @@ Ce script va tout lancer les commandes sur la machine *remote* depuis sa machine
 ```
 reclog_remote_kill.sh
 ```
+
+# Test de la connexion
+
+simplement avec un telnet
+
+et un tail -f
+
 
 
 
