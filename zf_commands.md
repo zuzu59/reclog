@@ -1,11 +1,12 @@
 # Mes petits trucs à moi pour bien travailler ;-)
-#zf200830.1527
+#zf200830.1941
 
 <!-- TOC titleSize:2 tabSpaces:2 depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 skip:2 title:1 charForUnorderedList:* -->
 ## Table of Contents
 * [Version simple](#version-simple)
   * [Test de la connexion](#test-de-la-connexion)
 * [Version complexe](#version-complexe)
+  * [Test de la connexion](#test-de-la-connexion)
 <!-- /TOC -->
 
 # Version simple
@@ -28,38 +29,49 @@ tail -f file.log
 # Version complexe
 dans une console en local
 ```
-ssh -R 55514:localhost:55514 ubuntu@www.zuzu-test.ml
+ssh ubuntu@www.zuzu-test.ml
+```
 
-ssh ubuntu@www.zuzu-test.ml socat -u TCP-LISTEN:55514,reuseaddr,fork TCP-LISTEN:55614,reuseaddr,bind=127.0.0.1
-
-socat -u TCP-LISTEN:55514,reuseaddr,fork TCP-LISTEN:55614,reuseaddr,bind=127.0.0.1
-
- ```
+```
+export user=ubuntu
+export host_remote=www.zuzu-test.ml
+export port_remote=55614
+export port_local=55514
+ssh -N -R $port_remote:localhost:$port_local $user@$host_remote
+```
 dans une autre console en local
 ```
-socat -u TCP4-LISTEN:55514,reuseaddr,fork OPEN:./file.log,creat,append
-
-ssh -N -L 55514:localhost:55614 ubuntu@www.zuzu-test.ml
+export user=ubuntu
+export host_remote=www.zuzu-test.ml
+export port_reclog=55514
+export port_remote=55614
+ssh -t $user@$host_remote ssh -g -N -L $port_reclog:localhost:$port_remote localhost
 ```
-Encore dans une autre console en local
+Enfin dans une autre console en local
 ```
-socat -u TCP4-LISTEN:55514,reuseaddr,fork OPEN:./file.log,creat,append
-
-socat TCP4:localhost:55514 OPEN:./file.log,creat,append
-
-
+export port_local=55514
+export filename=file.log
+socat -u TCP4-LISTEN:$port_local,reuseaddr,fork OPEN:./$filename,creat,append
 ```
 
 ## Test de la connexion
 Encore dans une autre console en local
 ```
-telnet www.zuzu-test.ml 55514
+export host_remote=www.zuzu-test.ml
+export port_reclog=55514
+telnet $host_remote $port_reclog
 ```
 Encore dans une autre console en local
 ```
-tail -f file.log
+export filename=file.log
+tail -f $filename
 ```
 
+
+pour tuer tous les process qui ont 55514 dans leur nom:
+```
+for i in $(ps ax |grep 55514 | awk '{print $1}'); do kill -9 $i; done
+```
 
 
 
