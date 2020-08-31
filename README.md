@@ -1,7 +1,7 @@
 # reclog
 Système très simple d'enregistrement de logs via le réseau
 
-zf200831.0934
+zf200831.1443
 
 <!-- TOC titleSize:2 tabSpaces:2 depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 skip:1 title:1 charForUnorderedList:* -->
 ## Table of Contents
@@ -42,7 +42,7 @@ socat -u TCP4-LISTEN:port_reclog,reuseaddr,fork OPEN:./filename,creat,append
 ```
 On peut l'utiliser facilement avec ce petit script bash:
 ```
-reclog2file.sh port_reclog filename
+./reclog2file.sh port_reclog filename
 ```
 
 ### Test de la connexion
@@ -81,12 +81,7 @@ socat -u TCP4-LISTEN:port_local,reuseaddr,fork OPEN:./filename,creat,append
 
 On peut le faire facilement avec ce petit script bash (à faire tourner sur sa machine *locale*):
 ```
-reclog2remote2file.sh user@host_remote port_reclog port_remote port_local filename
-```
-
-Ce script va tout lancer les commandes sur la machine *remote* depuis sa machine *locale* en *tâche de fond*. Après avoir terminé avec le *reclog*, on peut tout arrêter avec ce petit script:
-```
-reclog_remote_kill.sh
+./reclog2remote2file.sh user@host_remote port_reclog port_remote port_local filename
 ```
 
 
