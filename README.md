@@ -1,14 +1,10 @@
 # reclog
 Système très simple d'enregistrement de logs via le réseau
 
-zf200831.0918
-
-# ATTENTION, en cours de rédaction !
-
+zf200831.0934
 
 <!-- TOC titleSize:2 tabSpaces:2 depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 skip:1 title:1 charForUnorderedList:* -->
 ## Table of Contents
-* [ATTENTION, en cours de rédaction !](#attention-en-cours-de-rédaction-)
 * [Buts](#buts)
 * [Problématiques](#problématiques)
 * [Moyens](#moyens)
@@ -46,7 +42,7 @@ socat -u TCP4-LISTEN:port_reclog,reuseaddr,fork OPEN:./filename,creat,append
 ```
 On peut l'utiliser facilement avec ce petit script bash:
 ```
-reclog2file.sh port filename
+reclog2file.sh port_reclog filename
 ```
 
 ### Test de la connexion
