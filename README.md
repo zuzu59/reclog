@@ -1,7 +1,7 @@
 # reclog
 Système très simple d'enregistrement de logs via le réseau
 
-zf200830.1941
+zf200831.0918
 
 # ATTENTION, en cours de rédaction !
 
@@ -12,10 +12,11 @@ zf200830.1941
 * [Buts](#buts)
 * [Problématiques](#problématiques)
 * [Moyens](#moyens)
-  * [Deux versions sont possibles](#deux-versions-sont-possibles)
-* [Version simple](#version-simple)
-* [Version complexe avec un tremplin tunnel reverse ssh](#version-complexe-avec-un-tremplin-tunnel-reverse-ssh)
-* [Test de la connexion](#test-de-la-connexion)
+* [Deux versions sont possibles](#deux-versions-sont-possibles)
+  * [Version simple](#version-simple)
+    * [Test de la connexion](#test-de-la-connexion)
+  * [Version complexe avec un tremplin tunnel reverse ssh](#version-complexe-avec-un-tremplin-tunnel-reverse-ssh)
+  * [Test de la connexion](#test-de-la-connexion)
 <!-- /TOC -->
 
 
@@ -30,25 +31,38 @@ Comme le processus est *isolé*, embarqué dans un container *Docker* ou dans un
 
 
 # Moyens
-Pour faire très simple on va utiliser la commande *socat* de Linux pour *détourner* ce qui arrive sur un *port* dans un fichier.<br>
-Il suffit donc simplement, pour faire un *print console*, d'écrire dans un *port* du serveur pour sauvegarder dans un fichier les informations de debugs.
+Pour faire très simple on va utiliser la commande *socat* de Linux pour *détourner* ce qui arrive sur un *port* dans un *fichier*.<br>
+Il suffit donc simplement, pour faire un *print console*, d'écrire dans un *port* du serveur pour *écrire* dans un fichier les informations de *debug*.
 
 
-## Deux versions sont possibles
+# Deux versions sont possibles
 
-# Version simple
+## Version simple
 ![Image](https://github.com/zuzu59/reclog/blob/master/img/reclog%20figure%201.jpg?raw=true)
 
 Tout ce qui *arrive* sur un *port* est redirigé dans un fichier avec la commande *socat* (à faire tourner sur la machine *locale* ou *remote*). Simple et pratique quand on se trouve soit le même réseau ou alors que le fichier à observer se trouve sur un serveur sur Internet.
 ```
-socat -u TCP4-LISTEN:55514,reuseaddr,fork OPEN:./file.log,creat,append
+socat -u TCP4-LISTEN:port_reclog,reuseaddr,fork OPEN:./filename,creat,append
 ```
 On peut l'utiliser facilement avec ce petit script bash:
 ```
 reclog2file.sh port filename
 ```
 
-# Version complexe avec un tremplin tunnel reverse ssh
+### Test de la connexion
+On peut tester la connexion avec un simple **telnet** (à faire tourner dans une autre console où tourne le *socat*):
+```
+telnet localhost port_reclog
+```
+
+et en suite un **tail -f** (à faire tourner dans une autre console où tourne le *socat*):
+```
+tail -f filename
+```
+Tout ce qui est *écrit* dans la console *telnet* va se retrouver *enregistré* dans le fichier sur la machine
+
+
+## Version complexe avec un tremplin tunnel reverse ssh
 ![Image](https://github.com/zuzu59/reclog/blob/master/img/reclog%20figure%202.jpg?raw=true)
 
 * tout ce qui *arrive* sur un port, d'un serveur sur Internet, est redirigé sur un autre *port* de la même machine, afin de pouvoir y crocher un *tunnel ssh reverse* pour déporter l'enregistrement du fichier sur sa machine locale. Cela permet d'utiliser un serveur *reclog* sur Internet et d'avoir le fichier de log sur sa machine de son réseau local sans devoir ouvrir un port sur le NAT de son routeur.
@@ -66,7 +80,7 @@ ssh -t user@host_remote ssh -g -N -L port_reclog:localhost:port_remote localhost
 
 Enfin on redirige tout ce qui arrive sur le *port_local* de sa machine dans un fichier avec la commande *socat* (à faire tourner dans une autre console sur sa machine locale):
 ```
-socat -u TCP4-LISTEN:port_local,reuseaddr,fork OPEN:./file.log,creat,append
+socat -u TCP4-LISTEN:port_local,reuseaddr,fork OPEN:./filename,creat,append
 ```
 
 On peut le faire facilement avec ce petit script bash (à faire tourner sur sa machine *locale*):
@@ -79,16 +93,17 @@ Ce script va tout lancer les commandes sur la machine *remote* depuis sa machine
 reclog_remote_kill.sh
 ```
 
-# Test de la connexion
+
+## Test de la connexion
 On peut tester la connexion avec un simple **telnet** (à faire tourner dans une autre console sur sa machine locale):
 ```
-telnet machine_remote port_reclog
+telnet host_remote port_reclog
 ```
 
 et en suite un **tail -f** (à faire tourner dans une autre console sur sa machine locale):
 ```
-tail -f file.log
+tail -f filename
 ```
-
+Tout ce qui est *écrit* dans la console *telnet* va se retrouver *enregistré* dans le fichier sur sa machine
 
 
