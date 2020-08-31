@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #Petit script pour démarrer l'enregistrement des logs en version simple
 
 echo -e "
-reclog2file.sh  zf200831.0944"
+reclog2file.sh  zf200831.1056"
 
 #test si l'argument est vide
 if [ -z "$1" ]

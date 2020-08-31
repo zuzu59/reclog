@@ -1,5 +1,5 @@
 # Mes petits trucs à moi pour bien travailler ;-)
-#zf200831.0902
+#zf200831.1214
 
 <!-- TOC titleSize:2 tabSpaces:2 depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 skip:2 title:1 charForUnorderedList:* -->
 ## Table of Contents
@@ -37,7 +37,7 @@ export user=ubuntu
 export host_remote=www.zuzu-test.ml
 export port_remote=55614
 export port_local=55514
-ssh -N -R $port_remote:localhost:$port_local $user@$host_remote
+ssh -N -R $port_remote:localhost:$port_local $user@$host_remote &
 ```
 dans une autre console en local
 ```
