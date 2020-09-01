@@ -1,5 +1,5 @@
 # Mes petits trucs à moi pour bien travailler ;-)
-#zf200831.1449
+#zf200901.1105
 
 <!-- TOC titleSize:2 tabSpaces:2 depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 skip:2 title:1 charForUnorderedList:* -->
 ## Table of Contents
@@ -42,3 +42,25 @@ Encore dans une autre console en local
 tail -f file.log
 ```
 
+python3
+from datetime import datetime
+print(str(datetime.now()))
+
+print("toto")
+
+
+from datetime import datetime, timezone, timedelta
+
+utc_dt = datetime.now(timezone.utc)
+
+print("Local time {}".format(utc_dt.astimezone().isoformat()))
+
+print(datetime.now(timezone.cest))
+
+offset = timezone(timedelta(hours=0))
+
+print(datetime.now(timezone(timedelta(hours=2))))
+
+print(datetime.now(timezone(timedelta(hours=2))))
+
+print(timedelta(hours=2))
